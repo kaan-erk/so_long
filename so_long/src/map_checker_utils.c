@@ -12,57 +12,86 @@
 
 #include "so_long.h"
 
-void	place_map(int fd, t_map **map)
+void	place_map(int fd1, int fd2, t_map **map)
 {
-	char	*line;
-	int		i;
-	t_map	*tmp;
+    char	*line;
+    int		i;
+    t_map	*tmp;
 
-	tmp = *map;
-	i = 0;
-	tmp->map = (char **)malloc(sizeof(char *) * 100);
-	while ((line = get_next_line(fd)) > 0)
-	{
-		if (i == 0)
-			tmp->width = ft_strlen(line);
-		tmp->map[i] = ft_strdup(line);
-		tmp->height++;
-		i++;
-		free(line);
-	}
-	tmp->width--;
-	free(line);
+    tmp = *map;
+    i = 0;
+    tmp->height = 0;
+    tmp->width = 0;
+    while ((line = get_next_line(fd1)) != NULL)
+    {
+        tmp->height++;
+        free(line);
+    }
+    tmp->map = (char **)malloc(sizeof(char *) * tmp->height);
+    if (tmp->map == NULL)
+    {
+        ft_putendl_fd("Memory allocation failed", 2);
+        return ;
+    }
+    while ((line = get_next_line(fd2)) != NULL)
+    {
+        if (i == 0)
+            tmp->width = ft_strlen(line);
+		if (control_map_line(line, tmp->width, i + 1, tmp->height) || element_control(line, tmp, i))
+		{
+			free(line);
+			return ;
+		}
+        tmp->map[i] = ft_strdup(line);
+        if (tmp->map[i] == NULL)
+        {
+            ft_putendl_fd("Memory allocation failed", 2);
+            free(line);
+            return ;
+        }
+        i++;
+        free(line);
+    }
+    ft_printf("Final i: %d\n", i);
+    ft_printf("Final width: %d\n", tmp->width);
+    ft_printf("Final height: %d\n", tmp->height);
 }
 
 void	map_read(char *file_name, t_map **map)
 {
-	int	fd;
+    int	fd1;
+    int	fd2;
 
-	fd = open(file_name, O_RDONLY);
-	if (fd < 0)
-	{
-		ft_putendl_fd(strerror(errno), 2);
-		return ;
-	}
-	place_map(fd, map);
-	close(fd);
-	ft_printf("%d\n", (*map)->height);
-	ft_printf("%d\n", (*map)->width);
-	ft_printf("%s", (*map)->map[0]);
+    fd1 = open(file_name, O_RDONLY);
+    if (fd1 < 0)
+    {
+        ft_putendl_fd(strerror(errno), 2);
+        return ;
+    }
+    fd2 = open(file_name, O_RDONLY);
+    if (fd2 < 0)
+    {
+        ft_putendl_fd(strerror(errno), 2);
+        close(fd1);
+        return ;
+    }
+    place_map(fd1, fd2, map);
+    close(fd1);
+    close(fd2);
 }
 
 int	file_name_check(char *file_name)
 {
-	int	i;
+    int	i;
 
-	i = 0;
-	while (file_name[i] != '.')
-		i++;
-	if (ft_strncmp(file_name + i, ".ber", 4) == 0 && file_name[i + 4] == '\0')
-	{
-		ft_printf("True file name\n");
-		return (0);
-	}
-	else
-		return (1);
+    i = 0;
+    while (file_name[i] != '.')
+        i++;
+    if (ft_strncmp(file_name + i, ".ber", 4) == 0 && file_name[i + 4] == '\0')
+    {
+        ft_printf("True file name\n");
+        return (0);
+    }
+    else
+        return (1);
 }

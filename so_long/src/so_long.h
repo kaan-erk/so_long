@@ -31,6 +31,9 @@ typedef struct s_map
 	char	**map;
 	int		height;
 	int		width;
+	int		coin_c;
+	int		exit_c;
+	int		player_c;
 	t_coord	player;
 	t_coord	exit;
 	t_coord	coin;
@@ -43,5 +46,8 @@ void	free_array(char **tmp);
 void	way_out(int i);
 void	map_read(char *file_name, t_map **map);
 t_map	*init_map(void);
+void	free_map(t_map *map);
+int element_control(char *line, t_map *tmp, int height);
+int control_map_line(char *line, int width, int j, int height);
 
 #endif

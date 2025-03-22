@@ -8,6 +8,7 @@ RM = rm -rf
 
 SRCS = 	src/so_long.c\
 	 	src/utils.c\
+	 	src/map_control.c\
 	 	src/map_checker.c\
 	 	src/map_checker_utils.c\
 		src/get_next_line.c\

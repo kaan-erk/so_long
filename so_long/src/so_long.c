@@ -12,26 +12,6 @@
 
 #include "so_long.h"
 
-void	free_map(t_map *map)
-{
-    int	i;
-
-    if (map)
-    {
-        if (map->map)
-        {
-            i = 0;
-            while (i < map->height)
-            {
-                free(map->map[i]);
-                i++;
-            }
-            free(map->map);
-        }
-        free(map);
-    }
-}
-
 int	main(int ac, char **av)
 {
 	t_map	*map;
