@@ -44,10 +44,11 @@ void	map_checker(char *file, t_map **map);
 int		file_name_check(char *file);
 void	free_array(char **tmp);
 void	way_out(int i);
-void	map_read(char *file_name, t_map **map);
+int	map_read(char *file_name, t_map **map);
 t_map	*init_map(void);
 void	free_map(t_map *map);
 int element_control(char *line, t_map *tmp, int height);
-int control_map_line(char *line, int width, int j, int height);
+int control_map_line(char *line, t_map *map, int j);
+char	**copy_map(char **original_map, int height);
 
 #endif
